@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ORAGE — Coming Soon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #0a0a0c;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Rain canvas sits behind everything */
+    #rain-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Lightning flash overlay */
+    #flash {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.04s ease;
+    }
+
+    /* Back to portfolio */
+    .back-btn {
+      position: fixed;
+      top: 28px;
+      left: 32px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.55);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .back-btn:hover { color: rgba(255,255,255,0.95); }
+    .back-btn svg { width: 14px; height: 14px; opacity: 0.7; }
+
+    /* Center stage */
+    .stage {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .logo-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo-img {
+      width: min(480px, 80vw);
+      height: auto;
+      filter: drop-shadow(0 0 40px rgba(180,180,255,0.35)) brightness(1.15);
+      animation: float 6s ease-in-out infinite;
+      user-select: none;
+      pointer-events: none;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .brand-name {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(72px, 13vw, 148px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-top: -18px;
+      text-shadow:
+        0 0 40px rgba(200,210,255,0.5),
+        0 0 80px rgba(180,180,255,0.2);
+      animation: float 6s ease-in-out infinite;
+      animation-delay: -3s;
+      user-select: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    .coming-soon {
+      margin-top: -10px;
+      font-size: clamp(10px, 1.4vw, 14px);
+      font-weight: 300;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+    }
+
+    /* Lightning SVG canvas overlay for dramatic bolts */
+    #bolt-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* Vignette */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.72) 100%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="rain-canvas"></canvas>
+  <canvas id="bolt-canvas"></canvas>
+  <div id="flash"></div>
+  <div class="vignette"></div>
+
+  <a class="back-btn" href="javascript:history.back()">
+    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M9 2L4 7l5 5"/>
+    </svg>
+    Back to portfolio
+  </a>
+
+  <div class="stage">
+    <div class="logo-wrap">
+      <img class="logo-img" src="uploads/ORAGE temp logo.png" alt="ORAGE" />
+      <p class="coming-soon">Coming Soon</p>
+    </div>
+  </div>
+
+  <script>
+  // ─── RAIN ───────────────────────────────────────────────────────────────────
+  const rainCanvas = document.getElementById('rain-canvas');
+  const rCtx = rainCanvas.getContext('2d');
+
+  let W, H;
+  const drops = [];
+  const DROP_COUNT = 340;
+
+  function resize() {
+    W = rainCanvas.width  = window.innerWidth;
+    H = rainCanvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Init drops
+  for (let i = 0; i < DROP_COUNT; i++) {
+    drops.push({
+      x: Math.random() * 2000 - 500,
+      y: Math.random() * 2000 - 500,
+      len: 14 + Math.random() * 22,
+      speed: 18 + Math.random() * 24,
+      opacity: 0.08 + Math.random() * 0.28,
+      width: 0.5 + Math.random() * 0.8,
+    });
+  }
+
+  const ANGLE = 0.18; // slight diagonal
+  const cos = Math.cos(Math.PI / 2 - ANGLE);
+  const sin = Math.sin(Math.PI / 2 - ANGLE);
+
+  function drawRain() {
+    rCtx.clearRect(0, 0, W, H);
+    for (const d of drops) {
+      rCtx.beginPath();
+      rCtx.strokeStyle = `rgba(174,194,220,${d.opacity})`;
+      rCtx.lineWidth = d.width;
+      rCtx.moveTo(d.x, d.y);
+      rCtx.lineTo(d.x + sin * d.len, d.y + cos * d.len);
+      rCtx.stroke();
+
+      d.x += sin * d.speed * 0.18;
+      d.y += cos * d.speed * 0.18;
+
+      if (d.y > H + 40 || d.x > W + 40) {
+        d.x = Math.random() * W * 1.4 - 200;
+        d.y = -50 - Math.random() * 200;
+      }
+    }
+    requestAnimationFrame(drawRain);
+  }
+  drawRain();
+
+  // ─── LIGHTNING BOLT GENERATOR ────────────────────────────────────────────────
+  const boltCanvas = document.getElementById('bolt-canvas');
+  const bCtx = boltCanvas.getContext('2d');
+  const flash = document.getElementById('flash');
+
+  function resizeBolt() {
+    boltCanvas.width  = window.innerWidth;
+    boltCanvas.height = window.innerHeight;
+  }
+  resizeBolt();
+  window.addEventListener('resize', resizeBolt);
+
+  function generateBolt(x1, y1, x2, y2, roughness, depth) {
+    if (depth === 0) {
+      return [[x1, y1, x2, y2]];
+    }
+    const mx = (x1 + x2) / 2 + (Math.random() - 0.5) * roughness;
+    const my = (y1 + y2) / 2 + (Math.random() - 0.5) * roughness * 0.4;
+    const segs = [];
+    segs.push(...generateBolt(x1, y1, mx, my, roughness * 0.55, depth - 1));
+    segs.push(...generateBolt(mx, my, x2, y2, roughness * 0.55, depth - 1));
+
+    // Occasional branch
+    if (depth > 1 && Math.random() < 0.38) {
+      const bx = mx + (Math.random() - 0.3) * roughness * 1.2;
+      const by = my + roughness * (0.5 + Math.random());
+      segs.push(...generateBolt(mx, my, bx, by, roughness * 0.4, depth - 2));
+    }
+    return segs;
+  }
+
+  function drawBolt(segments, alpha, glow) {
+    bCtx.save();
+    // Glow pass
+    bCtx.shadowColor = 'rgba(200,210,255,1)';
+    bCtx.shadowBlur  = glow;
+    bCtx.strokeStyle = `rgba(220,230,255,${alpha})`;
+    bCtx.lineWidth   = 1.5;
+    bCtx.lineCap     = 'round';
+    bCtx.beginPath();
+    for (const [x1,y1,x2,y2] of segments) {
+      bCtx.moveTo(x1, y1);
+      bCtx.lineTo(x2, y2);
+    }
+    bCtx.stroke();
+    // Core bright line
+    bCtx.shadowBlur  = 4;
+    bCtx.strokeStyle = `rgba(255,255,255,${alpha * 0.9})`;
+    bCtx.lineWidth   = 0.7;
+    bCtx.beginPath();
+    for (const [x1,y1,x2,y2] of segments) {
+      bCtx.moveTo(x1, y1);
+      bCtx.lineTo(x2, y2);
+    }
+    bCtx.stroke();
+    bCtx.restore();
+  }
+
+  let lightningActive = false;
+
+  function triggerLightning() {
+    if (lightningActive) return;
+    lightningActive = true;
+
+    const bW = boltCanvas.width;
+    const bH = boltCanvas.height;
+
+    // Start from somewhere near the top, end somewhere lower
+    const startX = bW * 0.2 + Math.random() * bW * 0.6;
+    const startY = 0;
+    const endX   = startX + (Math.random() - 0.5) * 300;
+    const endY   = bH * 0.55 + Math.random() * bH * 0.35;
+
+    const segments = generateBolt(startX, startY, endX, endY, 200, 6);
+
+    let frame = 0;
+    const totalFrames = 10 + Math.floor(Math.random() * 8);
+    const alphas = [1, 0.3, 0.9, 0.2, 0.8, 0.1, 0.6, 0, 0.4, 0.1, 0, 0];
+
+    // Flash the page
+    flash.style.opacity = '0.22';
+    setTimeout(() => { flash.style.opacity = '0.08'; }, 40);
+    setTimeout(() => { flash.style.opacity = '0'; },   120);
+
+    function animBolt() {
+      bCtx.clearRect(0, 0, bW, bH);
+      const a = alphas[frame] ?? 0;
+      if (a > 0) drawBolt(segments, a, 28);
+      frame++;
+      if (frame < totalFrames) {
+        setTimeout(animBolt, 30 + Math.random() * 20);
+      } else {
+        bCtx.clearRect(0, 0, bW, bH);
+        lightningActive = false;
+        scheduleNextLightning();
+      }
+    }
+    animBolt();
+  }
+
+  function scheduleNextLightning() {
+    const delay = 2500 + Math.random() * 5500; // 2.5s – 8s
+    setTimeout(triggerLightning, delay);
+  }
+
+  // Kick off
+  setTimeout(triggerLightning, 1200);
+  </script>
+</body>
+</html>
