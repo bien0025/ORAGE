@@ -8,7 +8,7 @@ Built as a static single-page site using HTML and CSS.
 
 ## Live Preview
 
-[View Site →](https://yourusername.github.io) <!-- Replace with your actual URL -->
+[View Site →](https://orage-mu.vercel.app/) <!-- Replace with your actual URL -->
 
 ---
 
@@ -37,36 +37,6 @@ Orage (French for *storm*) is a streetwear brand designed for people who want qu
 
 ---
 
-## Running Locally
-
-No build step needed. Just open the file in your browser:
-
-```bash
-open index.html
-```
-
-Or with VS Code Live Server:
-
-```bash
-# Install Live Server extension in VS Code
-# Right click index.html → Open with Live Server
-```
-
----
-
-## Deployment
-
-Deployed via GitHub Pages.
-
-To deploy your own version:
-
-1. Fork this repo
-2. Go to **Settings → Pages**
-3. Set source to `main` branch, `/ (root)`
-4. Your site will be live at `https://yourusername.github.io/repo-name`
-
----
-
 ## Design
 
 - **Brand:** Orage
@@ -79,7 +49,7 @@ To deploy your own version:
 
 ## Author
 
-Designed and developed by [Your Name](https://github.com/yourusername)
+Designed and developed by [Obed Bien-Aime] (https://github.com/bien0025)
 
 ---
 
