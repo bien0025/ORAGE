@@ -1,6 +1,8 @@
 # ORAGE Studio — Landing Page
 
 ![ORAGE Studio Logo](uploads/Main%20logo.png)
+
+
 A portfolio landing page for **ORAGE-Studio**, a Montréal-based streetwear brand built on three pillars: affordability, 100% cotton comfort, and full size inclusivity (XS–3XL).
 
 Built as a static single-page site using HTML and CSS.
