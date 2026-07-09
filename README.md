@@ -1,6 +1,7 @@
-# Orage — Landing Page
+# ORAGE Studio — Landing Page
 
-A portfolio landing page for **Orage**, a Montréal-based streetwear brand built on three pillars: affordability, 100% cotton comfort, and full size inclusivity (XS–3XL).
+![ORAGE Studio Logo](uploads/Main%20logo.png)
+A portfolio landing page for **ORAGE-Studio**, a Montréal-based streetwear brand built on three pillars: affordability, 100% cotton comfort, and full size inclusivity (XS–3XL).
 
 Built as a static single-page site using HTML and CSS.
 
@@ -8,13 +9,13 @@ Built as a static single-page site using HTML and CSS.
 
 ## Live Preview
 
-[View Site →](https://orage-mu.vercel.app/) <!-- Replace with your actual URL -->
+[View Site →](https://orages.vercel.app/) <!-- Replace with your actual URL -->
 
 ---
 
 ## About the Brand
 
-Orage (French for *storm*) is a streetwear brand designed for people who want quality fabric, intentional fits, and bold graphic identity — without the luxury price tag.
+ORAGE Studio (French for *storm*) is a streetwear brand designed for people who want quality fabric, intentional fits, and bold graphic identity — without the luxury price tag.
 
 > *No polyester. Ever.*
 
@@ -39,7 +40,7 @@ Orage (French for *storm*) is a streetwear brand designed for people who want qu
 
 ## Design
 
-- **Brand:** Orage
+- **Brand:** ORAGE Studio
 - **Location:** Montréal, QC
 - **Typeface:** Rock Salt (Google Fonts)
 - **Colors:** Storm black `#0f0f0f` · Bone white `#f5f4f0` · Storm sand `#c8b89a`
@@ -53,4 +54,4 @@ Designed and developed by [Obed Bien-Aime] (https://github.com/bien0025)
 
 ---
 
-*Orage — Montréal — No polyester. Ever.*
+*ORAGE Studio — Montréal — No polyester. Ever.*
